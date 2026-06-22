@@ -1474,71 +1474,79 @@ function toggleDarkMode() {
 
 // ── Init ──────────────────────────────────
 
-document.addEventListener('DOMContentLoaded', async function() {
-    loadThemePreference();
-    var darkModeBtn = document.getElementById('darkModeToggle');
-    if (darkModeBtn) darkModeBtn.addEventListener('click', toggleDarkMode);
+(function() {
+    async function initProfilePage() {
+        loadThemePreference();
+        var darkModeBtn = document.getElementById('darkModeToggle');
+        if (darkModeBtn) darkModeBtn.addEventListener('click', toggleDarkMode);
 
-    currentUser = await checkAuth();
-    if (!currentUser) return;
-    loadProfile();
+        currentUser = await checkAuth();
+        if (!currentUser) return;
+        loadProfile();
 
-    // ── Quote Click-to-Edit ────────────
-    var quoteDisplay = document.getElementById('quoteDisplay');
-    if (quoteDisplay) {
-        quoteDisplay.addEventListener('click', editQuote);
+        // ── Quote Click-to-Edit ────────────
+        var quoteDisplay = document.getElementById('quoteDisplay');
+        if (quoteDisplay) {
+            quoteDisplay.addEventListener('click', editQuote);
+        }
+
+        // ── Profile Form Submit ──────────────
+        var profileForm = document.getElementById('profileForm');
+        if (profileForm) {
+            profileForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                var fullName = document.getElementById('profileFullName');
+                if (!fullName || !fullName.value.trim()) { showToast('Nama lengkap wajib diisi', 'error'); return; }
+                var btn = document.getElementById('saveProfileBtn');
+                var originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+                btn.disabled = true;
+                try {
+                    var data = { full_name: fullName.value.trim() };
+                    var usernameInput = document.getElementById('profileUsername');
+                    if (usernameInput && usernameInput.value.trim()) data.username = usernameInput.value.trim();
+                    await apiRequest('user/profile', 'PUT', data);
+                    if (currentUser) currentUser.full_name = fullName.value.trim();
+                    var sidebarNameEl = document.getElementById('sidebarUserName');
+                    var userNameEl = document.getElementById('userName');
+                    if (sidebarNameEl) sidebarNameEl.textContent = fullName.value.trim();
+                    if (userNameEl) userNameEl.textContent = fullName.value.trim();
+                    showToast('Profil berhasil diperbarui', 'success');
+                } catch (error) { console.error(error); }
+                finally { btn.innerHTML = originalText; btn.disabled = false; }
+            });
+        }
+
+        // ── Password Form Submit ─────────────
+        var passwordForm = document.getElementById('passwordForm');
+        if (passwordForm) {
+            passwordForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                var currentPw = document.getElementById('currentPassword');
+                var newPw = document.getElementById('newPassword');
+                var confirmPw = document.getElementById('confirmPassword');
+                if (!currentPw.value) { showToast('Password lama wajib diisi', 'error'); return; }
+                if (!newPw.value || newPw.value.length < PASSWORD_MIN_LENGTH) { showToast('Password baru minimal ' + PASSWORD_MIN_LENGTH + ' karakter', 'error'); return; }
+                if (newPw.value !== confirmPw.value) { showToast('Konfirmasi password tidak cocok', 'error'); return; }
+                var btn = document.getElementById('savePasswordBtn');
+                var originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengubah...';
+                btn.disabled = true;
+                try {
+                    await apiRequest('user/password', 'PUT', { current_password: currentPw.value, new_password: newPw.value });
+                    showToast('Password berhasil diubah', 'success');
+                    currentPw.value = ''; newPw.value = ''; confirmPw.value = '';
+                } catch (error) { console.error(error); }
+                finally { btn.innerHTML = originalText; btn.disabled = false; }
+            });
+        }
     }
 
-    // ── Profile Form Submit ──────────────
-    var profileForm = document.getElementById('profileForm');
-    if (profileForm) {
-        profileForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            var fullName = document.getElementById('profileFullName');
-            if (!fullName || !fullName.value.trim()) { showToast('Nama lengkap wajib diisi', 'error'); return; }
-            var btn = document.getElementById('saveProfileBtn');
-            var originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
-            btn.disabled = true;
-            try {
-                var data = { full_name: fullName.value.trim() };
-                var usernameInput = document.getElementById('profileUsername');
-                if (usernameInput && usernameInput.value.trim()) data.username = usernameInput.value.trim();
-                await apiRequest('user/profile', 'PUT', data);
-                if (currentUser) currentUser.full_name = fullName.value.trim();
-                var sidebarNameEl = document.getElementById('sidebarUserName');
-                var userNameEl = document.getElementById('userName');
-                if (sidebarNameEl) sidebarNameEl.textContent = fullName.value.trim();
-                if (userNameEl) userNameEl.textContent = fullName.value.trim();
-                showToast('Profil berhasil diperbarui', 'success');
-            } catch (error) { console.error(error); }
-            finally { btn.innerHTML = originalText; btn.disabled = false; }
-        });
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initProfilePage);
+    } else {
+        initProfilePage();
     }
-
-    // ── Password Form Submit ─────────────
-    var passwordForm = document.getElementById('passwordForm');
-    if (passwordForm) {
-        passwordForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            var currentPw = document.getElementById('currentPassword');
-            var newPw = document.getElementById('newPassword');
-            var confirmPw = document.getElementById('confirmPassword');
-            if (!currentPw.value) { showToast('Password lama wajib diisi', 'error'); return; }
-            if (!newPw.value || newPw.value.length < PASSWORD_MIN_LENGTH) { showToast('Password baru minimal ' + PASSWORD_MIN_LENGTH + ' karakter', 'error'); return; }
-            if (newPw.value !== confirmPw.value) { showToast('Konfirmasi password tidak cocok', 'error'); return; }
-            var btn = document.getElementById('savePasswordBtn');
-            var originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengubah...';
-            btn.disabled = true;
-            try {
-                await apiRequest('user/password', 'PUT', { current_password: currentPw.value, new_password: newPw.value });
-                showToast('Password berhasil diubah', 'success');
-                currentPw.value = ''; newPw.value = ''; confirmPw.value = '';
-            } catch (error) { console.error(error); }
-            finally { btn.innerHTML = originalText; btn.disabled = false; }
-        });
-    }
-});
+})();
 </script>
 @endpush
