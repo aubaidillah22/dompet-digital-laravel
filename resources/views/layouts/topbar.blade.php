@@ -10,6 +10,9 @@
                 <span class="user-avatar-wrap"><i class="fas fa-user" id="userAvatarIcon"></i></span>
                 <span class="user-name" id="userName">{{ session('full_name') ?? session('username') ?? 'User' }}</span>
             </div>
+            <button class="top-bar-btn" onclick="window.location.reload()" title="Refresh Halaman">
+                <i class="fas fa-sync-alt"></i>
+            </button>
             <button class="dark-mode-toggle" id="darkModeToggle" title="Mode Gelap/Terang">
                 <i class="fas fa-moon"></i>
             </button>
