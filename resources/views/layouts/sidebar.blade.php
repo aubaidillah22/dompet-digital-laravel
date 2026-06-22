@@ -17,9 +17,6 @@
                     <i class="fas fa-tachometer-alt"></i> <span class="nav-text">Dashboard</span>
                 </a>
             </li>
-            <li class="nav-item nav-divider">
-                <span>Menu</span>
-            </li>
             <li class="nav-item">
                 <a href="/dompet" class="nav-link {{ $active === 'dompet' ? 'active' : '' }}">
                     <i class="fas fa-wallet nav-icon-wallet"></i>
