@@ -1,58 +1,99 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Dompet Digital
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi **manajemen keuangan pribadi** berbasis web yang dibangun dengan Laravel 13, menampilkan arsitektur **session-based SPA-like** dengan Blade + JavaScript dinamis.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Fitur / Menu Aplikasi
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 1. Autentikasi
+- **Login** — Masuk dengan username dan password (rate-limited: 10 percobaan/menit)
+- **Register** — Daftar akun baru (otomatis membuat 2 dompet default: Dompet Utama & Tabungan)
+- **Logout** — Hapus sesi
+- **Session Check** — API untuk memverifikasi status sesi
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 2. Dashboard (`/dashboard`)
+- **Kartu Dompet Ganda** — Saldo Dompet Utama & Tabungan dalam hero card
+- **Ringkasan Statistik** — Total pemasukan, pengeluaran, saldo, jumlah transaksi (seumur hidup + bulan ini)
+- **Rasio Pengeluaran** — Persentase pengeluaran terhadap pemasukan bulan ini
+- **Rata-rata Bulanan** — Rata-rata pemasukan/pengeluaran per bulan
+- **Grafik** — Pemasukan doughnut, Pengeluaran pie, Tren bulanan bar, Pertumbuhan tabungan line
+- **Progress Tabungan** — Progress bar menuju target tabungan
+- **Aksi Cepat** — Kelola dompet, kelola tabungan, refresh data
+- **Transaksi Terbaru** — Tabel 10 transaksi terakhir
 
-## Learning Laravel
+### 3. Dompet Utama (`/dompet`)
+- **Hero Saldo** — Saldo utama dengan animasi
+- **Ringkasan** — Pemasukan, pengeluaran, saldo, total transaksi
+- **Filter Transaksi** — Semua, Bulan Ini, Bulan Lalu, pemilih bulan manual
+- **Tabel Transaksi** — Search, pagination, edit inline, delete dengan konfirmasi
+- **CRUD Transaksi** — Tambah, edit, hapus transaksi pemasukan/pengeluaran
+- **Transfer Antar Dompet** — Pindahkan saldo antar dompet (membuat transaksi berpasangan)
+- **Ekspor Laporan** — Export ke Excel (XLSX) dan PDF
+- **Grafik** — Pie pengeluaran, Doughnut pemasukan
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 4. Tabungan (`/tabungan`)
+- **Hero Tabungan** — Saldo tabungan hijau
+- **Statistik Tabungan** — Total saved, bulan ini, rata-rata/bulan, total transaksi
+- **Target Tabungan** — Progress bar dengan fitur edit target nominal
+- **Grafik Pertumbuhan** — Line chart pertumbuhan tabungan
+- **Topup** — Transfer dari Dompet Utama ke Tabungan via modal
+- **Tabel Transaksi Tabungan** — Search & pagination
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 5. Profil (`/profile`)
+- **Avatar** — Pilih dari 19 preset avatar (icon + background warna + label)
+- **Quote Motivasi** — Edit quote dengan efek typewriter dan inline editing
+- **Edit Profil** — Ubah nama lengkap dan username
+- **Ganti Password** — Validasi password saat ini, hint kekuatan password
+- **Dark Mode** — Toggle tema gelap/terang
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+### 6. Admin Panel (`/admin`)
+- **Dashboard Admin** — Kartu statistik: total user, transaksi, pemasukan, pengeluaran, saldo utama, saldo tabungan
+- **Grafik Admin** — Bar chart pemasukan, pengeluaran, saldo dompet per user
+- **Manajemen User** — Tambah, edit, hapus user + buat dompet otomatis
+- **Lihat Transaksi User** — Filter per hari/bulan/tahun dengan pagination
+- **Ekspor Data User** — Excel & PDF
 
-## Agentic Development
+### 7. Fitur Umum
+- **SPA Navigation** — Navigasi tanpa reload penuh menggunakan `js/spa.js`
+- **Dark Mode** — Toggle tema dengan persistensi localStorage
+- **Splash Screen** — Animasi loading saat masuk aplikasi
+- **Animasi Glassmorphism** — UI dengan efek kaca pada halaman auth
+- **Refresh Data** — Tombol refresh untuk update data real-time
+- **Toast Notifikasi** — SweetAlert2 untuk feedback aksi
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+---
 
-```bash
-composer require laravel/boost --dev
+## Teknologi
 
-php artisan boost:install
-```
+| Stack | Detail |
+|---|---|
+| **Backend** | Laravel 13, PHP 8.3 |
+| **Frontend** | Blade, JavaScript (vanilla), TailwindCSS 4 |
+| **Database** | SQLite (default) / MySQL |
+| **Chart** | Chart.js |
+| **Icons** | Font Awesome 6.5.1 |
+| **Export** | SheetJS (XLSX), jsPDF + autotable |
+| **Notifikasi** | SweetAlert2 |
+| **Build** | Vite 8 |
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+---
 
-## Contributing
+## Struktur Database
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+| Tabel | Deskripsi |
+|---|---|
+| `users` | id, username, full_name, password, role (user/admin), avatar, quote |
+| `wallets` | id, user_id, name, type (main/savings), icon, color, savings_target |
+| `transactions` | id, user_id, wallet_id, transaction_date, type (income/expense), category, amount, note |
+| `categories` | id, name, type (income/expense/both), icon (7 kategori default) |
+| `sessions` | id, user_id, ip_address, user_agent, payload, last_activity |
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Peran Pengguna
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+| Peran | Akses |
+|---|---|
+| **User** | Dashboard, Dompet, Tabungan, Profil — kelola transaksi & keuangan pribadi |
+| **Admin** | Semua akses User + Admin Panel untuk manajemen user & statistik global |
