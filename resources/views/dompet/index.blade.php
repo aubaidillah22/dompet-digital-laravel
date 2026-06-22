@@ -211,7 +211,7 @@ body.dark-mode .hero-amount { color: #f0b429; }
     .hero-icon { width: 56px; height: 56px; font-size: 1.4rem; border-radius: 18px; }
     .hero-amount { font-size: 1.5rem; }
 }
-</style>
+
 .btn {
     padding: 10px 18px; border-radius: 40px; font-weight: 600; font-size: 0.8rem;
     cursor: pointer; transition: all 0.2s; border: none;
@@ -1932,8 +1932,8 @@ async function addTransaction(event) {
         category: category,
         amount: amount,
         note: document.getElementById('note').value,
-        wallet_id: currentWalletId || undefined
     };
+    if (currentWalletId) data.wallet_id = currentWalletId;
     if (!data.transaction_date || !data.type || !data.category || data.amount <= 0) {
         showToast('Semua field wajib diisi dengan benar', 'error');
         submitBtn.innerHTML = originalText; submitBtn.disabled = false; return;
@@ -2003,14 +2003,13 @@ async function updateTransaction() {
         category = manualCategory;
     }
     const data = {
-        id: parseInt(id),
         transaction_date: document.getElementById('editTransactionDate').value,
         type: document.getElementById('editType').value,
         category: category,
         amount: amount,
         note: document.getElementById('editNote').value,
-        wallet_id: undefined
     };
+    if (currentWalletId) data.wallet_id = currentWalletId;
     try {
         await apiRequest(`transactions/${id}`, 'PUT', data);
         showToast('Transaksi berhasil diupdate', 'success');
