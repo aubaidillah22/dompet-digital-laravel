@@ -7,9 +7,6 @@
 /* ── Dompet-specific styles ────────────── */
 .stat-value { font-size: 1.5rem; }
 
-/* Search bar overrides */
-.search-bar { position: relative; }
-
 /* Type Toggle */
 .type-toggle {
     display: flex; gap: 8px;

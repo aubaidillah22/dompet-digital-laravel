@@ -276,6 +276,9 @@ body.dark-mode ::-webkit-scrollbar-thumb:hover {
 * { scrollbar-width: thin; scrollbar-color: rgba(212,148,10,0.3) transparent; }
 body.dark-mode * { scrollbar-color: rgba(240,180,41,0.25) transparent; }
 
+/* ── CSS Reset ──────────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
 /* ── Base/Layout ───────────────────────────── */
 body {
     font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
@@ -682,7 +685,8 @@ body.dark-mode .stat-text-income { color: #34d399; }
 body.dark-mode .stat-text-expense { color: #fca5a5; }
 body.dark-mode .stat-text-count { color: rgba(255,255,255,0.9); }
 
-.stat-period { font-size: 0.65rem; color: var(--text-muted); margin-top: 2px; display: flex; align-items: center; gap: 4px; opacity: 0.7; }
+.stat-period { font-size: 0.65rem; color: var(--text-muted); margin-top: 2px; display: flex; align-items: center; gap: 4px; opacity: 0.7; transition: opacity 0.3s; }
+.stat-period i { font-size: 0.55rem; opacity: 0.6; }
 .stat-card:hover .stat-period { opacity: 1; }
 
 .stat-glow {
@@ -798,6 +802,7 @@ textarea.form-control { border-radius: 20px; resize: vertical; }
     margin-bottom: 12px; padding: 6px 14px;
     background: var(--input-bg); border: 1px solid var(--input-border);
     border-radius: 40px; transition: all 0.2s;
+    position: relative;
 }
 .search-bar:focus-within { border-color: var(--accent-gold); box-shadow: 0 0 0 3px rgba(240,180,41,0.15); }
 .search-bar-icon { color: var(--text-muted); font-size: 0.8rem; opacity: 0.6; flex-shrink: 0; }

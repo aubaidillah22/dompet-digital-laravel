@@ -101,10 +101,6 @@
 .form-card-body { max-width: 520px; }
 
 /* Form overrides */
-.form-group label {
-    display: block; font-size: 0.78rem; font-weight: 600;
-    color: var(--text-secondary); margin-bottom: 6px;
-}
 .form-control {
     padding: 11px 18px;
 }
@@ -131,10 +127,7 @@
     transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
     animation: quoteCardEntry 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
-@keyframes quoteCardEntry {
-    0% { opacity: 0; transform: translateY(24px) scale(0.97); }
-    100% { opacity: 1; transform: translateY(0) scale(1); }
-}
+
 .quote-card:hover {
     border-color: rgba(240,180,41,0.35);
     box-shadow: 0 8px 32px rgba(240,180,41,0.08);
@@ -218,11 +211,7 @@
     pointer-events: none;
     animation: glowDrift 8s ease-in-out infinite;
 }
-@keyframes glowDrift {
-    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
-    33% { transform: translate(-20px, -15px) scale(1.2); opacity: 0.7; }
-    66% { transform: translate(10px, -8px) scale(0.9); opacity: 0.3; }
-}
+
 
 .quote-shimmer {
     position: absolute; top: 0; left: -100%; width: 60%; height: 1px;
@@ -503,10 +492,7 @@
     transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
     animation: quoteCardEntry 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
-@keyframes quoteCardEntry {
-    0% { opacity: 0; transform: translateY(24px) scale(0.97); }
-    100% { opacity: 1; transform: translateY(0) scale(1); }
-}
+
 .quote-card:hover {
     border-color: rgba(240,180,41,0.35);
     box-shadow: 0 8px 32px rgba(240,180,41,0.08);
@@ -600,11 +586,7 @@
     pointer-events: none;
     animation: glowDrift 8s ease-in-out infinite;
 }
-@keyframes glowDrift {
-    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
-    33% { transform: translate(-20px, -15px) scale(1.2); opacity: 0.7; }
-    66% { transform: translate(10px, -8px) scale(0.9); opacity: 0.3; }
-}
+
 
 /* Shimmer border line */
 .quote-card::before {
