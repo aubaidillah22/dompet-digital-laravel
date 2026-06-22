@@ -2192,15 +2192,41 @@ async function exportToExcel() {
         const transactions = data.transactions || [];
         if (transactions.length === 0) { showToast('Tidak ada transaksi untuk diekspor', 'error'); return; }
 
-        const exportData = transactions.map(t => ({
-            'Tanggal': t.transaction_date ? new Date(t.transaction_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '-',
-            'Jenis': t.type === 'income' ? 'Pemasukan' : 'Pengeluaran',
-            'Kategori': t.category,
-            'Nominal': t.amount,
-            'Catatan': t.note || '-'
-        }));
+        const totalIncome = transactions.filter(t => t.type === 'income').reduce((a, t) => a + parseFloat(t.amount), 0);
+        const totalExpense = transactions.filter(t => t.type === 'expense').reduce((a, t) => a + parseFloat(t.amount), 0);
+        const balance = totalIncome - totalExpense;
 
-        const ws = XLSX.utils.json_to_sheet(exportData);
+        const todayStr = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+        const userName = document.getElementById('userName').textContent;
+
+        const fmtRupiah = (amount) => 'Rp ' + amount.toLocaleString('id-ID');
+
+        // Build sheet data: header block + table header + rows
+        const sheetData = [
+            ['Laporan Transaksi'],
+            [userName],
+            [\`Dompet Digital  \u2022  \${todayStr}\`],
+            [],
+            ['RINGKASAN', '', '', ''],
+            ['Total Pemasukan', '', '', fmtRupiah(totalIncome)],
+            ['Total Pengeluaran', '', '', fmtRupiah(totalExpense)],
+            ['Saldo', '', '', fmtRupiah(balance)],
+            [],
+            ['Tanggal', 'Jenis', 'Kategori', 'Nominal', 'Catatan'],
+            ...transactions.map(t => [
+                t.transaction_date ? new Date(t.transaction_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '-',
+                t.type === 'income' ? 'Pemasukan' : 'Pengeluaran',
+                t.category,
+                t.amount,
+                t.note || '-'
+            ])
+        ];
+
+        const ws = XLSX.utils.aoa_to_sheet(sheetData);
+
+        // Merge summary label cells (A5:D5 for 'RINGKASAN')
+        if (ws['!merges'] === undefined) ws['!merges'] = [];
+        ws['!merges'].push({ s: { r: 4, c: 0 }, e: { r: 4, c: 3 } });
 
         // Column widths
         ws['!cols'] = [
@@ -2213,7 +2239,7 @@ async function exportToExcel() {
 
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Riwayat Transaksi');
-        XLSX.writeFile(wb, `transaksi_${new Date().toISOString().slice(0, 10)}.xlsx`);
+        XLSX.writeFile(wb, 'transaksi_' + new Date().toISOString().slice(0, 10) + '.xlsx');
         showToast('File Excel berhasil diunduh', 'success');
     } catch (error) {
         console.error('Export Excel error:', error);
