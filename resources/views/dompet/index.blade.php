@@ -2205,21 +2205,30 @@ async function exportToExcel() {
         const sheetData = [
             ['Laporan Transaksi'],
             [userName],
-            [\`Dompet Digital  \u2022  \${todayStr}\`],
+            ['Dompet Digital \u2022 ' + todayStr],
             [],
             ['RINGKASAN', '', '', ''],
             ['Total Pemasukan', '', '', fmtRupiah(totalIncome)],
             ['Total Pengeluaran', '', '', fmtRupiah(totalExpense)],
             ['Saldo', '', '', fmtRupiah(balance)],
             [],
-            ['Tanggal', 'Jenis', 'Kategori', 'Nominal', 'Catatan'],
-            ...transactions.map(t => [
-                t.transaction_date ? new Date(t.transaction_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '-',
-                t.type === 'income' ? 'Pemasukan' : 'Pengeluaran',
-                t.category,
-                t.amount,
-                t.note || '-'
-            ])
+            ['Tanggal', 'Jenis', 'Kategori', 'Nominal', 'Saldo', 'Catatan'],
+            ...(function() {
+                const sorted = [...transactions].sort((a, b) => new Date(a.transaction_date) - new Date(b.transaction_date));
+                let runningBalance = 0;
+                return sorted.map(t => {
+                    const amt = parseFloat(t.amount);
+                    runningBalance += t.type === 'income' ? amt : -amt;
+                    return [
+                        t.transaction_date ? new Date(t.transaction_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '-',
+                        t.type === 'income' ? 'Pemasukan' : 'Pengeluaran',
+                        t.category,
+                        t.amount,
+                        'Rp ' + runningBalance.toLocaleString('id-ID'),
+                        t.note || '-'
+                    ];
+                });
+            })()
         ];
 
         const ws = XLSX.utils.aoa_to_sheet(sheetData);
@@ -2234,6 +2243,7 @@ async function exportToExcel() {
             { wch: 14 }, // Jenis
             { wch: 20 }, // Kategori
             { wch: 18 }, // Nominal
+            { wch: 22 }, // Saldo
             { wch: 30 }, // Catatan
         ];
 
