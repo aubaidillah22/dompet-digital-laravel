@@ -349,7 +349,6 @@
     .quote-btn { width: 30px; height: 30px; font-size: 0.65rem; border-radius: 8px; }
     .quote-glow { width: 120px; height: 120px; right: -30px; bottom: -40px; }
 }
-</style>
 
 /* ── Profile Hero ──────────────────────── */
 .profile-hero {
